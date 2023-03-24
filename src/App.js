@@ -1,25 +1,21 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
+import AppRoutes from './routes/AppRoutes';
+import AppNav from './components/AppNav';
+import axios from 'axios';
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+
+	axios.defaults.headers.common['Authorization'] = 'Bearer' + (user ? user.jwt_token : '')
+
+	return (
+		<div className='App'>
+			<AppNav user={user} setUser={setUser}/>
+			<AppRoutes user={user} setUser={setUser} />
+		</div>
+	);
 }
 
 export default App;

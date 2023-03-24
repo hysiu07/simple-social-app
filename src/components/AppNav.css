@@ -1,0 +1,21 @@
+.mainNav li{
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 20px;
+    list-style: none;
+    cursor: pointer;
+
+}
+
+.mainNav a{
+    text-decoration: none;
+}
+.mainNav a:hover{
+    text-decoration: underline;
+}
+
+.mainNav ul {
+    margin-top: 20px;
+}
+
+  
