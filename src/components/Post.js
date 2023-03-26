@@ -24,7 +24,7 @@ const Post = (props) => {
 			)
 			.then((res) => {
 				setLikes(like + (isLiked ? -1 : 1));
-				setFlagLike(!isLiked)
+				setFlagLike(!isLiked);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -41,6 +41,21 @@ const Post = (props) => {
 				props.setPosts((posts) => {
 					return posts.filter((post) => post.id !== res.data.post_id);
 				});
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	const unFollow = (id) => {
+		axios
+			.post('https://akademia108.pl/api/social-app/follows/disfollow', {
+				leader_id: id,
+			})
+			.then((res) => {
+				props.getDataPosts();
+				console.log(res);
+				
 			})
 			.catch((error) => {
 				console.error(error);
@@ -76,19 +91,33 @@ const Post = (props) => {
 						Delete post
 					</button>
 				)}
-				{/* {props.post.likes.filter((el) => {
-					if (el.username === props.user.username) {
-						return <button className='btn btn-like'>Like!</button>;
-					} else {
-						return <button className='btn btn-like'>Dislike!</button>;
-					}
-				})} */}
 
-				{props.user && (flagLike ? (
-					<button className='btn btn-like' onClick={()=>{addLike(props.post.id, flagLike)}}>Dislike!</button>
-				) : (
-					<button className='btn btn-like'onClick={()=>{addLike(props.post.id, flagLike)}}>Like!</button>
-				))}
+				{props.user && props.user.username !== props.post.user.username && (
+					<button className='btn btn-unfollow' onClick={()=> {
+						unFollow(props.post.user.id)
+					}}>Unfollow!</button>
+				)}
+
+				{props.user &&
+					(flagLike ? (
+						<button
+							className='btn btn-like'
+							onClick={() => {
+								addLike(props.post.id, flagLike);
+							}}
+						>
+							Dislike!
+						</button>
+					) : (
+						<button
+							className='btn btn-like'
+							onClick={() => {
+								addLike(props.post.id, flagLike);
+							}}
+						>
+							Like!
+						</button>
+					))}
 
 				<p className='likes'>{like}</p>
 			</div>

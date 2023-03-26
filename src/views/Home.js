@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../components/Post';
 import AddPost from '../components/AddPost'
+import FollowRecommendations from '../components/FollowRecommendations'
 import axios from 'axios';
 import './Home.css';
+
 
 const Home = (props) => {
 	const [posts, setPosts] = useState([]);
@@ -56,9 +58,11 @@ const Home = (props) => {
 	return (
 		<div className='home'>
 			{props.user && <AddPost addPost={getPrevPosts}/>}
+			{props.user && <FollowRecommendations user={props.user} getDataPosts={getDataPosts} posts={posts}/>}
+
 			<div className='postsList'>
 				{posts.map((post) => {
-					return <Post post={post} key={post.id} user={props.user} id={post.id} setPosts={setPosts}/>;
+					return <Post post={post} key={post.id} user={props.user} id={post.id} setPosts={setPosts} getDataPosts={getDataPosts}/>;
 				})}
 
 				{/* <button onClick={getNextDataPosts}>Load more</button>  */}

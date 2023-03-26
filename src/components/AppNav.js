@@ -39,6 +39,11 @@ const AppNav = (props) => {
 						<Link to='/signup'>SignUp</Link>
 					</li>
 				)}
+				{!props.user && (
+					<li>
+						<Link to='/signupkurs'>SignUpKurs</Link>
+					</li>
+				)}
 
 				{props.user && (
 					<li>
