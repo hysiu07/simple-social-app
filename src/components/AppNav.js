@@ -22,7 +22,7 @@ const AppNav = (props) => {
 		<nav className='mainNav'>
 			<ul>
 				<li>
-					<Link to='/' className='link one'>
+					<Link to='/simple-social-app' className='link one'>
 						Home
 					</Link>
 				</li>

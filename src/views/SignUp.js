@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import { Navigate, Link} from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './SignUp.css';
 
 const SignUp = (props) => {
-	// zbieranie danych
-
 	const [formInfo, setFormInfo] = useState({
 		username: '',
 		email: '',
 		password: '',
 		confirmPassword: '',
 	});
-
-	// przypisywanie wartosci
 
 	const [errors, setErrors] = useState({
 		username: '',
@@ -24,8 +20,6 @@ const SignUp = (props) => {
 
 	const [signUpMessage, setSignUpMessage] = useState('');
 	const [signUpDone, setSignUpDone] = useState(false);
-
-	// walidacja
 
 	const validate = () => {
 		let validationErrors = {
@@ -38,9 +32,6 @@ const SignUp = (props) => {
 		// user name validation
 
 		if (formInfo.username.length < 4) {
-			// NIE ROZUMIEM ZAPISU PYTANIE!!!!!!!!!!
-			// dlaczego return jest w {} klamrowych
-
 			validationErrors.username = true;
 
 			setErrors((prevState) => {
@@ -49,11 +40,6 @@ const SignUp = (props) => {
 					username: 'Username should have at least 4 characters',
 				};
 			});
-
-			// setObject((prevState) => ({
-			//     ...prevState,
-			//     secondKey: 'value',
-			//   }));
 		} else if (!/^[^\s]*$/.test(formInfo.username)) {
 			validationErrors.username = true;
 
@@ -168,7 +154,6 @@ const SignUp = (props) => {
 		if (!validate()) {
 			return;
 		}
-		console.log('wysylam');
 
 		axios
 			.post('https://akademia108.pl/api/social-app/user/signup', {
@@ -204,8 +189,6 @@ const SignUp = (props) => {
 			...formInfo,
 			[name]: target.value.trim(),
 		});
-
-	
 	};
 
 	return (
@@ -245,10 +228,13 @@ const SignUp = (props) => {
 				<button type='submit' disabled={signUpDone} className='btn'>
 					Sign Up!
 				</button>
-                {signUpDone && <div className='btn-login'>
-                   <Link to='/login' className='btn'>Go to </Link>
-
-                    </div>}
+				{signUpDone && (
+					<div className='btn-login'>
+						<Link to='/login' className='btn'>
+							Go to{' '}
+						</Link>
+					</div>
+				)}
 			</form>
 		</div>
 	);
