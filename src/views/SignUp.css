@@ -10,3 +10,12 @@ input {
 	padding: 10px;
 	width: 100%;
 }
+
+.signUp .btn[disabled] {
+	background-color: #5b6467;
+	background-image: linear-gradient(315deg, #5b6467 0%, #8b939a 74%);
+	cursor: not-allowed;
+}
+.btn-login {
+	margin-top: 20px;
+}

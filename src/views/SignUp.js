@@ -1,167 +1,255 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link} from 'react-router-dom';
 import axios from 'axios';
 import './SignUp.css';
 
 const SignUp = (props) => {
+	// zbieranie danych
 
-  // ref's in funcion component
-	let inputRefName = HTMLInputElement;
-	let inputRefEmail = HTMLInputElement;
-	let inputRefConfirmPass = HTMLInputElement;
-	let inputRefPass = HTMLInputElement;
+	const [formInfo, setFormInfo] = useState({
+		username: '',
+		email: '',
+		password: '',
+		confirmPassword: '',
+	});
 
-	const [userName, setUserName] = useState();
-	const [userEmail, setUserEmail] = useState();
-	const [userPass, setUserPass] = useState();
-	const [userConfirmPass, setUserConfirmPass] = useState();
+	// przypisywanie wartosci
 
-	const [errorFlag, setErrorFlag] = useState(true);
+	const [errors, setErrors] = useState({
+		username: '',
+		email: '',
+		password: '',
+		confirmPassword: '',
+	});
 
-	const [errorInfoName, setErrorInfoName] = useState('');
-	const [errorInfoEmail, setErrorInfoEmail] = useState('');
-	const [errorInfoPass, setErrorInfoPass] = useState('');
+	const [signUpMessage, setSignUpMessage] = useState('');
+	const [signUpDone, setSignUpDone] = useState(false);
 
-  const[confirmFlag, setConfirmFlag] = useState('')
+	// walidacja
 
-	const sendForm = (e) => {
-		e.preventDefault();
+	const validate = () => {
+		let validationErrors = {
+			username: false,
+			email: false,
+			password: false,
+			confirmPassword: false,
+		};
 
-		// username
+		// user name validation
 
-		if (userName.length <= 4  ) {
-			setErrorInfoName('Za krótka nazwa');
-			setErrorFlag(true);
-		} else if (!/^[^\s]*$/.test(userName)) {
-			setErrorInfoName('Skasuj białe znaki');
-			setErrorFlag(true);
+		if (formInfo.username.length < 4) {
+			// NIE ROZUMIEM ZAPISU PYTANIE!!!!!!!!!!
+			// dlaczego return jest w {} klamrowych
+
+			validationErrors.username = true;
+
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					username: 'Username should have at least 4 characters',
+				};
+			});
+
+			// setObject((prevState) => ({
+			//     ...prevState,
+			//     secondKey: 'value',
+			//   }));
+		} else if (!/^[^\s]*$/.test(formInfo.username)) {
+			validationErrors.username = true;
+
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					username: 'Username should`n have empty characters',
+				};
+			});
 		} else {
-			setErrorInfoName('');
-			setErrorFlag(false);
+			validationErrors.username = false;
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					username: '',
+				};
+			});
 		}
 
-		// email valid
+		// email validation
 
-		if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userEmail)) {
-			setErrorFlag(true);
-			setErrorInfoEmail('Zły e-mail');
+		if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formInfo.email)) {
+			validationErrors.email = true;
+
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					email: 'There is no valid email',
+				};
+			});
 		} else {
-			setErrorInfoEmail('');
-			setErrorFlag(false);
+			validationErrors.email = false;
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					email: '',
+				};
+			});
 		}
 
-		// password valid
+		// password validation
 
-		if (userPass === '') {
-			setErrorInfoPass('Podaj hasło');
-			setErrorFlag(true);
-		} else if (userPass !== userConfirmPass) {
-			setErrorInfoPass('Hasła muszą być takie same');
-			setErrorFlag(true);
-		} else if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(userPass)) {
-			setErrorInfoPass('hasło musi zawierać znaki specjalne');
-			setErrorFlag(true);
+		if (formInfo.password.length < 6) {
+			validationErrors.password = true;
+
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					password: 'Password should have at least 6 characters',
+				};
+			});
+		} else if (!/^[^\s]*$/.test(formInfo.password)) {
+			validationErrors.password = true;
+
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					password: 'Password should`n have empty characters',
+				};
+			});
+		} else if (
+			!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(formInfo.password)
+		) {
+			validationErrors.password = true;
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					password: 'Password must contain one of charts: ! # @ $ %',
+				};
+			});
 		} else {
-			setErrorInfoPass('');
-			setErrorFlag(false);
+			validationErrors.password = false;
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					password: '',
+				};
+			});
 		}
+		// confirm password validation
 
-		if (errorFlag === false) {
-			axios
-				.post('https://akademia108.pl/api/social-app/user/signup', {
-					username: userName,
-					email: userEmail,
-					password: userPass,
-					confirmPassword: userConfirmPass,
-				})
-				.then((res) => {
-					console.log(res);
+		if (formInfo.password !== formInfo.confirmPassword) {
+			validationErrors.confirmPassword = true;
 
-          setConfirmFlag(res.data.signedup)
-          
-
-				
-				})
-				.catch((error) => {
-					console.error(error);
-				});
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					confirmPassword: 'Password should be the same',
+				};
+			});
 		} else {
-			console.log('błąd formularza');
+			validationErrors.confirmPassword = false;
+
+			setErrors((prevState) => {
+				return {
+					...prevState,
+					confirmPassword: '',
+				};
+			});
 		}
-
-    if(confirmFlag === true){
-      inputRefName.value = ''
-      inputRefEmail.value = ''
-      inputRefPass.value = ''
-      inputRefConfirmPass.value = ''
-
-      setUserName('')
-      setUserEmail('')
-      setUserPass('')
-      setUserConfirmPass('')
-    }
-
+		return (
+			!validationErrors.username &&
+			!validationErrors.email &&
+			!validationErrors.password &&
+			!validationErrors.confirmPassword
+		);
 	};
 
-	const valueInputs = () => {
-		setUserName(inputRefName.value.trim());
-		setUserEmail(inputRefEmail.value.trim());
-		setUserPass(inputRefPass.value.trim());
-		setUserConfirmPass(inputRefConfirmPass.value.trim());
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		if (!validate()) {
+			return;
+		}
+		console.log('wysylam');
+
+		axios
+			.post('https://akademia108.pl/api/social-app/user/signup', {
+				username: formInfo.username,
+				email: formInfo.email,
+				password: formInfo.password,
+			})
+			.then((res) => {
+				console.log(res.data);
+				let resData = res.data;
+
+				if (resData.signedup) {
+					setSignUpMessage('Account created');
+					setSignUpDone(true);
+				} else {
+					if (resData.message.username) {
+						setSignUpMessage(resData.message.username[0]);
+					} else if (resData.message.email) {
+						setSignUpMessage(resData.message.email[0]);
+					}
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	const handleInputChange = (e) => {
+		const target = e.target;
+		const name = target.name;
+
+		setFormInfo({
+			...formInfo,
+			[name]: target.value.trim(),
+		});
+
+	
 	};
 
 	return (
 		<div className='signUp'>
 			{props.user && <Navigate to='/' />}
-			<form onSubmit={sendForm}>
+			<form onSubmit={handleSubmit}>
+				{signUpMessage && <h2>{signUpMessage}</h2>}
 				<input
-					ref={(element) => {
-						inputRefName = element;
-					}}
 					type='text'
 					name='username'
 					placeholder='User name'
-					onChange={valueInputs}
+					onChange={handleInputChange}
 				/>
-				<p>{errorInfoName}</p>
+				{errors.username && <p>{errors.username}</p>}
 
 				<input
-					ref={(element) => {
-						inputRefEmail = element;
-					}}
 					type='text'
 					name='email'
 					placeholder='Email'
-					onChange={valueInputs}
+					onChange={handleInputChange}
 				/>
-				<p>{errorInfoEmail}</p>
+				{errors.email && <p>{errors.email}</p>}
 				<input
-					ref={(element) => {
-						inputRefPass = element;
-					}}
 					type='password '
 					name='password'
 					placeholder='Password'
-					onChange={valueInputs}
+					onChange={handleInputChange}
 				/>
-				<p>{errorInfoPass}</p>
-
+				{errors.password && <p>{errors.password}</p>}
 				<input
-					ref={(element) => {
-						inputRefConfirmPass = element;
-					}}
 					type='password '
 					name='confirmPassword'
 					placeholder='Confirm password'
-					onChange={valueInputs}
+					onChange={handleInputChange}
 				/>
-				<button type='submit' className='btn'>
-					SignUp!
+				{errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+				<button type='submit' disabled={signUpDone} className='btn'>
+					Sign Up!
 				</button>
+                {signUpDone && <div className='btn-login'>
+                   <Link to='/login' className='btn'>Go to </Link>
+
+                    </div>}
 			</form>
-      <p>{confirmFlag && "Zarejestrowano uzytkownika!"}</p>
-      <p>{confirmFlag && "Zaloguj się!"}</p>
-     
 		</div>
 	);
 };

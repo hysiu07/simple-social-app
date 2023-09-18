@@ -18,7 +18,6 @@ const Login = (props) => {
 			...formData,
 			[name]: target.value,
 		});
-		console.log(formData);
 	};
 	const handlSubmit = (e) => {
 		e.preventDefault();
@@ -29,8 +28,7 @@ const Login = (props) => {
 				password: formData.password,
 			})
 			.then((res) => {
-
-        console.log(res.data);
+				console.log(res.data);
 				if (Array.isArray(res.data.username)) {
 					setLoginMessage(res.data.username[0]);
 				} else if (Array.isArray(res.data.password)) {
@@ -41,8 +39,6 @@ const Login = (props) => {
 					props.setUser(res.data);
 					localStorage.setItem('user', JSON.stringify(res.data));
 				}
-
-			
 			})
 			.catch((error) => {
 				console.error(error);
@@ -51,7 +47,7 @@ const Login = (props) => {
 
 	return (
 		<div className='login'>
-      {props.user && <Navigate to='/' />}
+			{props.user && <Navigate to='/' />}
 			<form onSubmit={handlSubmit}>
 				{loginMessage && <h2>{loginMessage}</h2>}
 				<input

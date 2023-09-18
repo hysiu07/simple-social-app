@@ -5,7 +5,6 @@ import axios from 'axios';
 const AddPost = (props) => {
 	const [postContent, setPostContent] = useState('');
 
-
 	const newPost = (e) => {
 		e.preventDefault();
 
@@ -17,9 +16,8 @@ const AddPost = (props) => {
 					content: postContent,
 				})
 				.then((res) => {
-                    props.addPost()
-					setPostContent("");
-					
+					props.addPost();
+					setPostContent('');
 				})
 				.catch((error) => {
 					console.error(error);
@@ -37,9 +35,7 @@ const AddPost = (props) => {
 					setPostContent(e.target.value);
 				}}
 			></textarea>
-			<button className='btn addPost-btn' >
-				Dodaj!
-			</button>
+			<button className='btn addPost-btn'>Dodaj!</button>
 		</form>
 	);
 };

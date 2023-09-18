@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Home from '../views/Home';
 import Login from '../views/Login';
 import SignUp from '../views/SignUp';
-import SignUpKurs from '../views/SignUpKurs';
+
 
 const AppRoutes = (props) => {
 	return (
@@ -10,7 +10,7 @@ const AppRoutes = (props) => {
 			<Route path='/' element={<Home user={props.user}/>} />
 			<Route path='/login' element={<Login  user={props.user} setUser={props.setUser} />} />
 			<Route path='/signup' element={<SignUp />} user={props.user}/>
-			<Route path='/signupkurs' element={<SignUpKurs />} user={props.user}/>
+			
 		</Routes>
 	);
 };

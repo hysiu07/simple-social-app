@@ -10,10 +10,8 @@ const AppNav = (props) => {
 		axios
 			.post('https://akademia108.pl/api/social-app/user/login')
 			.then((res) => {
-
 				props.setUser(null);
 				localStorage.setItem('user', null);
-				
 			})
 			.catch((error) => {
 				console.error(error);
@@ -37,11 +35,6 @@ const AppNav = (props) => {
 				{!props.user && (
 					<li>
 						<Link to='/signup'>SignUp</Link>
-					</li>
-				)}
-				{!props.user && (
-					<li>
-						<Link to='/signupkurs'>SignUpKurs</Link>
 					</li>
 				)}
 
